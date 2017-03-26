@@ -2,7 +2,7 @@ package redblacktree
 
 import Tree
 
-class RedBlackTree<K: Comparable<K>, V>: Tree<K, V> {
+class RedBlackTree<K: Comparable<K>, V>: Tree<K, V>, Iterable<Pair<K, V>> {
     var root: RBNode<K, V>? = null
 
     override fun insert(key: K, value: V) {
@@ -253,6 +253,44 @@ class RedBlackTree<K: Comparable<K>, V>: Tree<K, V> {
 
         if (root == node.parent)
             root = node.parent!!.parent
+    }
+
+    override fun iterator(): Iterator<Pair<K, V>> {
+        return (object: Iterator<Pair<K, V>> {
+            var node = max(root)
+            var next = max(root)
+            val last = min(root)
+
+            override fun hasNext(): Boolean {
+                return node != null && node!!.key >= last!!.key
+            }
+
+            override fun next(): Pair<K, V> {
+                next = node
+                node = nextSmaller(node)
+                return Pair(next!!.key, next!!.value)
+            }
+        })
+    }
+
+    private fun nextSmaller(node: RBNode<K, V>?): RBNode<K, V>? {
+        var smaller = node ?: return null
+
+        if (smaller.left != null)
+            return max(smaller.left!!)
+
+        else if (smaller == smaller.parent?.left) {
+            while (smaller == smaller.parent?.left)
+                smaller = smaller.parent!!
+        }
+        return smaller.parent
+    }
+
+    private fun min(node: RBNode<K, V>?): RBNode<K, V>? {
+        if (node?.left == null)
+            return node
+        else
+            return min(node.left)
     }
 
     private fun max(node: RBNode<K, V>?): RBNode<K, V>? {

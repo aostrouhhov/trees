@@ -2,7 +2,7 @@ package binarysearchtree
 
 import Tree
 
-class BinarySearchTree<K: Comparable<K>, V>: Tree<K, V> {
+class BinarySearchTree<K: Comparable<K>, V>: Tree<K, V>, Iterable<Pair<K, V>> {
     var root: Node<K, V>? = null
 
     override fun insert(key: K, value: V) {
@@ -114,6 +114,45 @@ class BinarySearchTree<K: Comparable<K>, V>: Tree<K, V> {
                 current = current.right
         }
         return null
+    }
+
+    override fun iterator(): Iterator<Pair<K, V>> {
+        return (object: Iterator<Pair<K, V>> {
+            var node = max(root)
+            var next = max(root)
+            val last = min(root)
+
+            override fun hasNext(): Boolean {
+                return node != null && node!!.key >= last!!.key
+            }
+
+            override fun next(): Pair<K, V> {
+                next = node
+                node = nextSmaller(node)
+                return Pair(next!!.key, next!!.value)
+            }
+        })
+    }
+
+    private fun nextSmaller(node: Node<K, V>?): Node<K, V>? {
+        var smaller = node ?: return null
+
+        if (smaller.left != null) {
+            return max(smaller.left!!)
+        }
+
+        else if (smaller == smaller.parent?.left) {
+            while (smaller == smaller.parent?.left)
+                smaller = smaller.parent!!
+        }
+        return smaller.parent
+    }
+
+    private fun min(rootNode: Node<K, V>?): Node<K, V>? {
+        if (rootNode?.left == null)
+            return rootNode
+        else
+            return min(rootNode.left)
     }
 
     private fun max(rootNode: Node<K, V>?): Node<K, V>? {

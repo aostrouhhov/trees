@@ -1,6 +1,8 @@
 package btree
 
-class BTree<K: Comparable<K>> (val t: Int) {
+import java.util.LinkedList
+
+class BTree<K: Comparable<K>> (val t: Int): Iterable<BNode<K>> {
     var root: BNode<K>? = null
 
     fun insert(key: K) {
@@ -166,5 +168,28 @@ class BTree<K: Comparable<K>> (val t: Int) {
                 i++
         }
         return key
+    }
+
+    override fun iterator(): Iterator<BNode<K>> {
+        return (object : Iterator<BNode<K>> {
+
+            var NodeList = LinkedList<BNode<K>>()
+
+            init {
+                if (root != null && root!!.keys.isNotEmpty()) {
+                    NodeList.add(root!!)
+                }
+            }
+
+            override fun hasNext() = NodeList.isNotEmpty()
+
+            override fun next(): BNode<K> {
+                val next = NodeList.remove()
+                if (!next.isLeaf) {
+                    NodeList.addAll(next.children)
+                }
+                return next
+            }
+        })
     }
 }

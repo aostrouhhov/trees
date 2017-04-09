@@ -74,7 +74,7 @@ class BinarySearchTree<K: Comparable<K>, V>: Tree<K, V>, Iterable<Pair<K, V>> {
         }
 
         else {
-            val successor: Node<K, V> = max(delNode.left)!!
+            val successor: Node<K, V> = min(delNode.right)!!
             delNode.key = successor.key
 
             if (successor.parent?.left == successor) {

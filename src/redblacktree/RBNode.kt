@@ -58,4 +58,30 @@ class RBNode<K: Comparable<K>, V>(var key: K, var value: V, var parent: RBNode<K
             node2.colorBlack = node1color
         }
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other?.javaClass != javaClass) return false
+
+        other as RBNode<*, *>
+
+        if (key != other.key) return false
+        if (value != other.value) return false
+        if (parent != other.parent) return false
+        if (colorBlack != other.colorBlack) return false
+        if (left != other.left) return false
+        if (right != other.right) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = key.hashCode()
+        result = 31 * result + (value?.hashCode() ?: 0)
+        result = 31 * result + (parent?.hashCode() ?: 0)
+        result = 31 * result + colorBlack.hashCode()
+        result = 31 * result + (left?.hashCode() ?: 0)
+        result = 31 * result + (right?.hashCode() ?: 0)
+        return result
+    }
 }

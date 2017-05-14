@@ -57,7 +57,7 @@ class RedBlackTree<K: Comparable<K>, V>: Tree<K, V>, Iterable<Pair<K, V>> {
 
                     current == current.parent?.right -> {
                         current = current.parent
-                        if (current!!.parent!!.parent?.parent == null) root = current.parent
+                        if (current!!.parent?.parent == null) root = current.parent
                         current.rotateLeft()
                     }
 
@@ -81,7 +81,7 @@ class RedBlackTree<K: Comparable<K>, V>: Tree<K, V>, Iterable<Pair<K, V>> {
 
                     current == current.parent?.left -> {
                         current = current.parent
-                        if (current?.parent?.parent?.parent == null) root = current!!.parent
+                        if (current!!.parent?.parent == null) root = current.parent
                         current.rotateRight()
                     }
 

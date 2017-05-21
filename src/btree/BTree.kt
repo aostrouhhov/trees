@@ -56,7 +56,7 @@ class BTree<K: Comparable<K>> (val t: Int): Iterable<BNode<K>> {
         while (i < node.keys.size && key > node.keys[i])
             i++
 
-        if (node.keys[i] == key) {
+        if (node.keys.size > i && node.keys[i] == key) {
             if ((node.isLeaf)) {
                 node.keys.removeAt(i)
             } else if (node.children[i].keys.size > t - 1) {
